@@ -137,7 +137,7 @@ function _addImages(){
 map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 map.addControl(new mapboxgl.ScaleControl() );
 map.showTileBoundaries = true;
-map.showCollisionBoxes() = true;
+map.showCollisionBoxes = false;
 
 function switchTileBound(){
   map.showTileBoundaries = !map.showTileBoundaries;
