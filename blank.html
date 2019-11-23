@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>Display a map</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
+<style>
+body { margin:0; padding:0; }
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+</style>
+</head>
+<body>
+ 
+<div id='map'></div>
+
+
+<script>
+var map = new mapboxgl.Map({
+  container: 'map', // container id
+  hash: true, //add #position on URL
+  style: './blank.json', // stylesheet location
+  center: [139.78148, 35.768793], // starting position [lng, lat]
+  zoom: 15, // starting zoom
+  localIdeographFontFamily: false
+});
+
+//Add Images
+//blank
+map.loadImage('./hatch/-gsibv-hatch-ltrb-4-255,255,255,1-255,255,255,0.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-ltrb-4-255,255,255,1-255,255,255,0', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-ltrb-4-255,255,255,1-255,255,255,1.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-ltrb-4-255,255,255,1-255,255,255,1', image);
+});
+
+
+//std
+map.loadImage('./hatch/-gsibv-hatch-cross-4-255,135,75,1-255,255,255,1.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-cross-4-255,135,75,1-255,255,255,1', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-ltrb-4-255,135,75,1-255,255,255,1.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-ltrb-4-255,135,75,1-255,255,255,1', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-ltrb-4-255,135,75,1-255,255,255,0.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-ltrb-4-255,135,75,1-255,255,255,0', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-dot-4-200,160,60,1-.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-dot-4-200,160,60,1-', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-minus-12-20,90,255,1-.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-minus-12-20,90,255,1-', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-dot-4-20,90,255,1-.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-dot-4-20,90,255,1-', image);
+});
+
+//pale
+map.loadImage('./hatch/-gsibv-hatch-cross-4-210,210,210,1-255,255,255,1.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-cross-4-210,210,210,1-255,255,255,1', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-dot-4-230,230,230,1-.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-dot-4-230,230,230,1-', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-ltrb-4-200,200,200,1-200,200,200,1.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-ltrb-4-200,200,200,1-200,200,200,1', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-ltrb-4-200,200,200,1-255,255,255,1.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-ltrb-4-200,200,200,1-255,255,255,1', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-ltrb-4-210,210,210,1-255,255,255,0.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-ltrb-4-210,210,210,1-255,255,255,0', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-ltrb-4-210,210,210,1-255,255,255,1.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-ltrb-4-210,210,210,1-255,255,255,1', image);
+});
+map.loadImage('./hatch/-gsibv-hatch-minus-12-230,230,230,1-.png', function(error, image) {
+  if (error) throw error;
+  map.addImage('-gsibv-hatch-minus-12-230,230,230,1-', image);
+});
+
+map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+
+</script>
+ 
+</body>
+</html>
