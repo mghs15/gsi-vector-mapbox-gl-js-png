@@ -149,9 +149,24 @@ function switchLayer(layer) {
     localIdeographFontFamily: false,
     diff: false
   });
+  
+  //スタイルも同期させる
+  if(layer.target.id == "std"){
+    mapright.setStyle('./stdr.json', {
+      localIdeographFontFamily: false,
+      diff: false
+    });
+  }else{
+    mapright.setStyle('./paler.json', {
+      localIdeographFontFamily: false,
+      diff: false
+    });
+  }
 }
  
-
+for (var i = 0; i < inputs.length; i++) {
+  inputs[i].onclick = switchLayer;
+}
 
 //クリックした地物の情報を表示する。
 map.on('click', function (e) {
