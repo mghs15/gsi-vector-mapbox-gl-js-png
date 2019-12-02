@@ -73,7 +73,7 @@ body { margin:0; padding:0; }
 
 <div id='menu'>
   <h1 class="titlebox" style="font-size: 100%; margin: 0 0;">
-  <a href="https://github.com/gsi-cyberjapan/gsimaps-vector-experiment" target="_blank">地理院地図Vector</a>のスタイルをシンプルな<a href="https://docs.mapbox.com/mapbox-gl-js/overview/" target="_blank">Mapbox GL JS</a>で実装する試み（第2弾）</h1>
+  <a href="#" onclick="open_gsivector()">地理院地図Vector</a>のスタイルをシンプルな<a href="https://docs.mapbox.com/mapbox-gl-js/overview/" target="_blank">Mapbox GL JS</a>で実装する試み（第2弾）</h1>
   <div id="stylelist">
     <input id='std' type='radio' name='rtoggle' value='std' checked='checked'>
     <label for='std'>標準地図</label>
@@ -144,6 +144,11 @@ function switchAdjustZoom(){
   console.log(adjustZoom);
 }
 
+function open_gsivector(){
+  var hash = location.hash;
+  var open_url = "https://maps.gsi.go.jp/vector/" + hash + "/&ls=vstd&disp=1&d=l";
+  window.open(open_url);
+}
 
 var layerList = document.getElementById('stylelist');
 var inputs = layerList.getElementsByTagName('input');
