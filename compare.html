@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>Display a map</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
+<style>
+body { margin:0; padding:0; }
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+</style>
+<style>
+#menu {
+    position: absolute;
+    left: 0.5em;
+    top: 0.5em; 
+    padding: 0.2em 0.5em;
+    margin: 0 0;
+    background: #ddeeff;
+    box-shadow: 0px 0px 0px 5px #ddeeff;
+    border: dashed 3px #aaccff;
+    width: 90%;
+    max-width: 350px;
+    font-family: 'Open Sans', sans-serif;
+}
+#menuright {
+    position: absolute;
+    left: 51%;
+    top: 0.5em; 
+    padding: 0.2em 0.5em;
+    margin: 0 0;
+    background: #ddeeff;
+    box-shadow: 0px 0px 0px 5px #ddeeff;
+    border: dashed 3px #aaccff;
+    width: 90%;
+    max-width: 350px;
+    font-family: 'Open Sans', sans-serif;
+}
+#features {
+    position: absolute;
+    left: 0.5em;
+    padding: 0.2em 0.5em;
+    top: 8em; 
+    max-height: 200px;
+    width: 90%;
+    max-width: 350px;
+    overflow: auto;
+    background: #ddeeff;
+    font-family: 'Open Sans', sans-serif;
+    word-wrap: break-word;
+}
+#features table td{
+    word-break : break-all;
+}
+</style>
+</head>
+<body>
+
+<div id='map' style='width:50%;'></div>
+<div id='mapright' style='width:50%;height:100%;position:absolute;left:50%;'></div>
+
+<div id='features'>クリックした地物の情報を表示します。</div>
+
+<div id='menu'>
+  <h1 class="titlebox" style="font-size: 100%; margin: 0 0;">
+  <a href="https://github.com/gsi-cyberjapan/gsimaps-vector-experiment" target="_blank">地理院地図Vector</a>のスタイルをシンプルな<a href="https://docs.mapbox.com/mapbox-gl-js/overview/" target="_blank">Mapbox GL JS</a>で実装する試み（第2弾）</h1>
+  <div id="stylelist">
+    <input id='std' type='radio' name='rtoggle' value='std' checked='checked'>
+    <label for='std'>標準地図</label>
+    <input id='pale' type='radio' name='rtoggle' value='pale'>
+    <label for='pale'>淡色地図</label>
+    <input id='blank' type='radio' name='rtoggle' value='blank'>
+    <label for='blank'>白地図</label>
+  </div>
+  <input type="button" value="タイル境界" onclick="switchTileBound()">
+  <input type="button" value="衝突範囲" onclick="switchCollisionBoxes()">
+  <input type="button" value="ズーム調整" onclick="switchAdjustZoom()">
+</div>
+
+<script>
+var adjustZoom = 0;
+
+var mapright = new mapboxgl.Map({
+  container: 'mapright', // container id
+//  hash: true, //add #position on URL
+  style: './stdr.json', // stylesheet location
+  center: [139.78148, 35.768793], // starting position [lng, lat]
+  zoom: 5, // starting zoom
+  localIdeographFontFamily: false
+});
+
+mapright.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+mapright.addControl(new mapboxgl.ScaleControl() );
+mapright.showTileBoundaries = true;
+mapright.showCollisionBoxes = false;
+
+/*----------------------------------------------------------------------*/
+
+var map = new mapboxgl.Map({
+  container: 'map', // container id
+  hash: true, //add #position on URL
+  style: './std.json', // stylesheet location
+  center: [139.78148, 35.768793], // starting position [lng, lat]
+  zoom: 5, // starting zoom
+  localIdeographFontFamily: false
+});
+
+
+//UI
+map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+map.addControl(new mapboxgl.ScaleControl() );
+map.showTileBoundaries = true;
+map.showCollisionBoxes = false;
+
+//Menu内
+function switchTileBound(){
+  map.showTileBoundaries = !map.showTileBoundaries;
+  mapright.showTileBoundaries = !mapright.showTileBoundaries;
+}
+
+function switchCollisionBoxes(){
+  map.showCollisionBoxes = !map.showCollisionBoxes;
+  mapright.showCollisionBoxes = !mapright.showCollisionBoxes;
+}
+
+function switchAdjustZoom(){
+  if(adjustZoom < 0.5){
+    adjustZoom = 1;
+  }else{
+    adjustZoom = 0;
+  }
+  console.log(adjustZoom);
+}
+
+
+var layerList = document.getElementById('stylelist');
+var inputs = layerList.getElementsByTagName('input');
+ 
+function switchLayer(layer) {
+  var layerId = layer.target.id;
+  _addImages();
+  map.setStyle('./' + layerId +'.json', {
+    localIdeographFontFamily: false,
+    diff: false
+  });
+}
+ 
+
+
+//クリックした地物の情報を表示する。
+map.on('click', function (e) {
+
+  var features = map.queryRenderedFeatures(e.point);
+  
+  var displayProperties = [
+    "type",
+    "properties",
+    "layer",
+  ];
+  
+  var displayFeatures = features.map(function(feat) {
+    var displayFeat = {};
+    displayProperties.forEach(function(prop) {
+      displayFeat[prop] = feat[prop];
+    });
+    return displayFeat;
+  });
+
+  var outputContent = "<table><tr><th align='center'>タイプ</th><th align='left'>地物</th></tr>";
+  var arrayLength = displayFeatures.length;
+  for(var i = 0; i < arrayLength; i++){
+    outputContent = outputContent + "<tr><td width='80' align='center' style='background-color: #ccddff;'>" + displayFeatures[i].layer.type + "</td><td>" + displayFeatures[i].layer.metadata.path + "</td></tr>";
+  }
+  outputContent = outputContent + "</table>";
+  
+  document.getElementById('features').innerHTML = outputContent;
+});
+
+//同期
+map.on('move', function (e) {
+
+  var centerMain = map.getCenter();
+  var bearingMain = map.getBearing();
+  var pitchMain = map.getPitch();
+  var zoomMain = map.getZoom() - adjustZoom;
+  
+  mapright.setCenter(centerMain);
+  mapright.setBearing(bearingMain);
+  mapright.setPitch(pitchMain);
+  mapright.setZoom(zoomMain);
+  
+});
+
+
+
+//Add Images
+_addImages();
+
+function _addImages(){
+  //blank
+  map.loadImage('./hatch/-gsibv-hatch-ltrb-4-255,255,255,1-255,255,255,0.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-ltrb-4-255,255,255,1-255,255,255,0', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-ltrb-4-255,255,255,1-255,255,255,1.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-ltrb-4-255,255,255,1-255,255,255,1', image);
+  });
+
+  //pale
+  map.loadImage('./hatch/-gsibv-hatch-cross-4-210,210,210,1-255,255,255,1.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-cross-4-210,210,210,1-255,255,255,1', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-dot-4-230,230,230,1-.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-dot-4-230,230,230,1-', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-ltrb-4-200,200,200,1-200,200,200,1.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-ltrb-4-200,200,200,1-200,200,200,1', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-ltrb-4-200,200,200,1-255,255,255,1.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-ltrb-4-200,200,200,1-255,255,255,1', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-ltrb-4-210,210,210,1-255,255,255,0.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-ltrb-4-210,210,210,1-255,255,255,0', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-ltrb-4-210,210,210,1-255,255,255,1.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-ltrb-4-210,210,210,1-255,255,255,1', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-minus-12-230,230,230,1-.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-minus-12-230,230,230,1-', image);
+  });
+
+  //std
+  map.loadImage('./hatch/-gsibv-hatch-cross-4-255,135,75,1-255,255,255,1.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-cross-4-255,135,75,1-255,255,255,1', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-ltrb-4-255,135,75,1-255,255,255,1.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-ltrb-4-255,135,75,1-255,255,255,1', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-ltrb-4-255,135,75,1-255,255,255,0.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-ltrb-4-255,135,75,1-255,255,255,0', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-dot-4-200,160,60,1-.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-dot-4-200,160,60,1-', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-minus-12-20,90,255,1-.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-minus-12-20,90,255,1-', image);
+  });
+  map.loadImage('./hatch/-gsibv-hatch-dot-4-20,90,255,1-.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('-gsibv-hatch-dot-4-20,90,255,1-', image);
+  });
+}
+
+
+</script>
+ 
+</body>
+</html>
