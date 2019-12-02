@@ -12,10 +12,14 @@ body { margin:0; padding:0; }
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 100%;
+  width: 50%;
 }
-</style>
-<style>
+#mapright {
+  width:50%;
+  height:100%;
+  position:absolute;
+  left:50%;
+}
 #menu {
     position: absolute;
     left: 0.5em;
@@ -62,8 +66,8 @@ body { margin:0; padding:0; }
 </head>
 <body>
 
-<div id='map' style='width:50%;'></div>
-<div id='mapright' style='width:50%;height:100%;position:absolute;left:50%;'></div>
+<div id='map'></div>
+<div id='mapright'></div>
 
 <div id='features'>クリックした地物の情報を表示します。</div>
 
@@ -108,7 +112,9 @@ var map = new mapboxgl.Map({
   style: './std.json', // stylesheet location
   center: [139.78148, 35.768793], // starting position [lng, lat]
   zoom: 5, // starting zoom
-  localIdeographFontFamily: false
+  localIdeographFontFamily: false,
+  clickTolerance: 20,
+  doubleClickZoom: false
 });
 
 
