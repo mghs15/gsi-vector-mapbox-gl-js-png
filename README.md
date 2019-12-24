@@ -1,5 +1,6 @@
-# gsi-vector-mapbox-gl-js
+# gsi-vector-mapbox-gl-js-png
 地理院地図のベクトルタイルをMapbox GL JSで表示するサンプル
+（fill-pattern用にPNG画像を利用するVer）
 
 - [標準地図](https://mghs15.github.io/gsi-vector-mapbox-gl-js-png/std.html#14.01/35.44575/139.9552)
 - [単色地図](https://mghs15.github.io/gsi-vector-mapbox-gl-js-png/pale.html#14.01/35.44575/139.9552)
