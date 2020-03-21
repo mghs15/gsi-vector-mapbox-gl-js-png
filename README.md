@@ -2,6 +2,8 @@
 地理院地図のベクトルタイルをMapbox GL JSで表示するサンプル
 （fill-pattern用にPNG画像を利用するVer）
 
+2020年3月21日 [地理院地図Vectorのアップデート](https://www.gsi.go.jp/johofukyu/johofukyu200318.html)に伴い、style.jsonを更新しました。Mapbox GL JSのverも1.5.0から1.8.1へアップデートしています。
+
 - [標準地図](https://mghs15.github.io/gsi-vector-mapbox-gl-js-png/std.html#14.01/35.44575/139.9552)
 - [単色地図](https://mghs15.github.io/gsi-vector-mapbox-gl-js-png/pale.html#14.01/35.44575/139.9552)
 - [白地図](https://mghs15.github.io/gsi-vector-mapbox-gl-js-png/blank.html#14.01/35.44575/139.9552)
